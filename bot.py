@@ -170,22 +170,22 @@ def text_handler(message):
     number_of_questions = 5  # len(answers) - 1
     flag = True
     for i in range(number_of_questions):
-        if answer in answers[i][0].split(', '):
+        if flag and answer in answers[i][0].split(', '):
             f = False
             bot.reply_to(message, constans.random_message())
             bot.send_message(message.chat.id, '{}'.format(questions[i+1][0]))
-    if flag: 
-        if answer in answers[number_of_questions][0].split(', '):
-            bot.reply_to(message, constans.random_message())
-            bot.send_message(message.chat.id,
-                             'Замечательно! Вы ответили правильно на все вопросы. ')
-            bio = bot.send_message(message.chat.id,
-                             'Пришлите, пожалуйста, адрес вашего biocoin-кошелька для получения токенов')
-            bot.register_next_step_handler(bio, wallet)
-        else:
-            bot.send_message(message.chat.id,
-                             'Упс. Нам очень жаль, но вы допустили ошибки. У вас есть возможность попробовать еще раз завтра.')
-            tostart(message)
+    if flag and answer in answers[number_of_questions][0].split(', '):
+        flag = False
+        bot.reply_to(message, constans.random_message())
+        bot.send_message(message.chat.id,
+                         'Замечательно! Вы ответили правильно на все вопросы. ')
+        bio = bot.send_message(message.chat.id,
+                         'Пришлите, пожалуйста, адрес вашего biocoin-кошелька для получения токенов')
+        bot.register_next_step_handler(bio, wallet)
+    if flag:
+        bot.send_message(message.chat.id,
+                         'Упс. Нам очень жаль, но вы допустили ошибки. У вас есть возможность попробовать еще раз завтра.')
+        tostart(message)
     conn.commit()
     conn.close()
 def wallet(message):

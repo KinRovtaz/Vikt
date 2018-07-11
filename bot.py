@@ -170,10 +170,11 @@ def text_handler(message):
     number_of_questions = 5  # len(answers) - 1
     flag = True
     for i in range(number_of_questions):
-        if flag and answer in answers[i][0].split(', '):
-            f = False
+        if answer in answers[i][0].split(', '):
+            flag = False
             bot.reply_to(message, constans.random_message())
             bot.send_message(message.chat.id, '{}'.format(questions[i+1][0]))
+            break
     if flag and answer in answers[number_of_questions][0].split(', '):
         flag = False
         bot.reply_to(message, constans.random_message())

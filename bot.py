@@ -167,31 +167,23 @@ def text_handler(message):
     c.execute("SELECT OK FROM table1")
     answers = c.fetchall()
     answer = message.text.lower()
-    if answer in answers[0][0].split(', '):
-        time.sleep(1)
+    number_of_questions = 5  # len(answers) - 1
+    flag = True
+    for i in range(number_of_questions):
+        if answer in answers[i][0].split(', '):
+            flag = False
+            bot.reply_to(message, constans.random_message())
+            bot.send_message(message.chat.id, '{}'.format(questions[i+1][0]))
+            break
+    if flag and answer in answers[number_of_questions][0].split(', '):
+        flag = False
         bot.reply_to(message, constans.random_message())
-        bot.send_message(message.chat.id, '{}'.format(questions[1][0]))
-    elif answer in answers[1][0].split(', '):
-        bot.reply_to(message, constans.random_message())
-        bot.send_message(message.chat.id, '{}'.format(questions[2][0]))
-    elif answer in answers[2][0].split(', '):
-        bot.reply_to(message, constans.random_message())
-        bot.send_message(message.chat.id, '{}'.format(questions[3][0]))
-    elif answer in answers[3][0].split(', '):
-        bot.reply_to(message, constans.random_message())
-        bot.send_message(message.chat.id, '{}'.format(questions[4][0]))
-    elif answer in answers[4][0].split(', '):
-        bot.reply_to(message, constans.random_message())
-        bot.send_message(message.chat.id, '{}'.format(questions[5][0]))
-    elif answer in answers[5][0].split(', '):
-        bot.reply_to(message, constans.random_message())
-        time.sleep(1)
         bot.send_message(message.chat.id,
                          'Замечательно! Вы ответили правильно на все вопросы. ')
         bio = bot.send_message(message.chat.id,
                          'Пришлите, пожалуйста, адрес вашего biocoin-кошелька для получения токенов')
         bot.register_next_step_handler(bio, wallet)
-    else:
+    if flag:
         bot.send_message(message.chat.id,
                          'Упс. Нам очень жаль, но вы допустили ошибки. У вас есть возможность попробовать еще раз завтра.')
         tostart(message)
